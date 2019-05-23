@@ -13,6 +13,7 @@
 * [README](Tracking/README.md)
 * [2006-A Review of Object Detection and Tracking Methods](Tracking/2006-a-review-of-object-detection-and-tracking-methods.md)
 * [2014-A Survey on Object Detection and Tracking Methods](Tracking/2014-a-survey-on-object-detection-and-tracking-methods.md)
+* [2015-Moving Object Tracking of Vehicle Detection-A Concise Review](Tracking/2015-moving-object-tracking-of-vehicle-detection-a-concise-review.md)
 
 ## Pose Estimation
 
