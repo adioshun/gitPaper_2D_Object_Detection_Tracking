@@ -90,7 +90,7 @@ MOT에서 주요 이슈는 `Apart from the common challenges in both SOT and MOT
 
 최근 연구 물들을 중심으로 하였다. `Note that this work is mainly dedicated to reviewing recent literature on the advances in multiple object tracking. As mentioned above, we also present experimental results on publicly available datasets excepted from existing publications to provide a quantitative view on the state-of-the-art MOT methods. `
 
-활용된 벤치마킹 결과는 [30]이다. `For standardized benchmarking of multiple object tracking we kindly refer the readers to the recent work MOTChallenge by Leal-Taixe´ et al. [30].`
+활용된 벤치마킹 [30]이다. `For standardized benchmarking of multiple object tracking we kindly refer the readers to the recent work MOTChallenge by Leal-Taixe´ et al. [30].`
 
 
 ### 1.3 Organization of This Review
@@ -110,17 +110,53 @@ MOT의 문제점을 수학적으로 기술 하였다. We first endeavor to give 
 
 ### 2.2 MOT Categorization
 
-It is difficult to classify one particular MOT method into a
-distinct category by a universal criterion. Admitting this, it is thus feasible to group MOT methods by multiple criteria.
-In the following we attempt to conduct this according to
-three criteria: a) initialization method, b) processing mode, and
-c) type of output. The reason we choose these three criteria is
-that this naturally follows the way of processing a task, i.e.,
-how the task is initialized, how it is processed and what type
-of result is obtained. In the following, each of the criteria
-along with its corresponding categorization is represented.
+다음 3가지 criteria에 따라서 분류 하였다. `It is difficult to classify one particular MOT method into a distinct category by a universal criterion. Admitting this, it is thus feasible to group MOT methods by multiple criteria. In the following we attempt to conduct this according to three criteria:`
+- a) initialization method, 
+- b) processing mode, and
+- c) type of output. 
+
+위 3가지를 선택한 이유는 process를 설명하기 직관적이기 때문이다. `The reason we choose these three criteria is that this naturally follows the way of processing a task, i.e., `
+- how the task is initialized, 
+- how it is processed and 
+- what type of result is obtained. 
+
+In the following, each of the criteria along with its corresponding categorization is represented.
 
 
+#### 2.2.1 Initialization Method
+
+물체가 초기화 되는 방식에 따라 나눌수 있다. `Most existing MOT works can be grouped into two sets [49], depending on how objects are initialized: `
+- Detection-Based Tracking (DBT) and 
+- Detection-Free Tracking (DFT).
+
+![](https://i.imgur.com/0XXPHuV.png)
+
+##### Detection-Based Tracking
+
+이 방식은 먼저 탐지를 하고 궤도에 연결하는 방식이다. `As shown in Figure 1 (top), objects are first detected and then linked into trajectories.`
+
+**tracking-by-detection**라고도 불리운다. `This strategy is also commonly referred to as “tracking-by-detection”. `
+
+흐름은 `Given a sequence, `
+- 각 프레임마다 후보군에 대한 물체 탐지 또는 모션 탐지가 수행 된다. `type-specific object detection or motion detection (based on background modeling) [50],[51] is applied in each frame to obtain object hypotheses, `
+- 이후 탐지 후보를 궤도에 연결하는 추적 작업이 수행 된다. `then (sequential or batch) tracking is conducted to link detection hypotheses into trajectories. `
+
+두가지 이슈가 있다. `There are two issues worth noting.`
+- 탐지기 학습이 선행 되기에 학습 대상에 의존적이다. `First, since the object detector is trained in advance, the majority of DBT focuses on specific kinds of targets, such as pedestrians, vehicles or faces. `
+- 탐지기 성능에 의존성이 크다. `Second, the performance of DBT highly depends on the performance of the employed object detector.`
+
+##### Detection-Free Tracking. 
+
+직접 물체의 수를 지정 해야 한다. 이후프레임에서 해당 물체의 위치를 localized 해준다. `As shown in Figure 1 (bottom), DFT [52], [53], [54], [55] requires manual initialization of a fixed number of objects in the first frame, then localizes these objects in subsequent frames.`
+
+
+DBT방식 많이 사용된다. DFT는 학습이 불필요한 장점이 있다. `DBT is more popular because new objects are discovered and disappearing objects are terminated automatically. DFT cannot deal with the case that objects appear. However, it is free of pre-trained object detectors.`
+
+Table 3 lists the major differences between DBT and DFT.
+
+![](https://i.imgur.com/R6WV5DN.png)
+
+#### 2.2.2 Processing Mode
 
 
 
