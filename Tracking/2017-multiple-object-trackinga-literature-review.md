@@ -99,7 +99,7 @@ MOT에서 주요 이슈는 `Apart from the common challenges in both SOT and MOT
 
 ### 1.4 Denotations
 
-
+---
 
 ## 2 MOT PROBLEM
 
@@ -183,5 +183,36 @@ As shown in Figure 2 (bottom), observations from all the frames are required to 
 Table 4 lists the differences between the two processing modes.
 
 ![](https://i.imgur.com/1pMV8Bp.png)
+
+#### 2.2.3 Type of Output 
+
+결과물의 무작위성(`randomness`)에 따라 MOT방식은 경정론적 또는 확률적 방식으로 나뉜다. `This criterion classifies MOT methods into deterministic ones and probabilistic ones, depending on the randomness of output. `
+
+Deterministic방식은 반복횟수에 상관 없이 동일한 결과 값이 나온다. `The output of deterministic tracking is constant when running the methods multiple times. `
+
+probabilistic방식은 반복시마다 다른 결과가 나온다. `While output results are different in different running trials of probabilistic tracking methods. `
+
+이 두 가지 방법의 차이는 섹션 2.1에서 언급한 최적화 방법에서 비롯된다`The difference between these two types of methods results from the optimization methods adopted as mentioned in Section 2.1.`
+
+
+#### 2.2.4 Discussion 
+
+탐지기 적용 여부에 따라 DBT/DFT가 나뉜다. `The difference between DBT and DFT is whether a detection model is adopted (DBT) or not (DFT). `
+
+탐지값 사용방식에 따라 온라인/오프라인이나뉜다.`The key to differentiate online and offline tracking is the way they process observations. `
+
+대부분 DFT는 온라인 방식과 같아 보인다. 하지만 예외도 있다. `Readers may question whether DFT is identical to online tracking because it seems DFT always processes observations sequentially. This is true in most cases although some exceptions exist. `
+
+Orderless tracking [64] is an example. It is DFT and simultaneously processes observations in an orderless way. Though it is for single object tracking, it can also be applied for MOT, and thus DFT can also be applied in a batch mode. 
+
+Another vagueness may rise between DBT and offline tracking, as in DBT tracklets or detection responses are usually associated in a batch way. Note that there are also sequential DBT which conducts association between previously obtained trajectories and new detection responses [8], [31], [65]. 
+
+The categories presented above in Section 2.2.1, 2.2.2 and 2.2.3 are three possible ways to classify MOT methods, while there may be others. 
+
+Notably, specific solutions for sport scenarios [5], [6], aerial scenes [44], [66], generic objects [8], [65], [67], [68], etc. exist and we suggest the readers refer to the respective publications. 
+
+By providing these three criteria described above, it is convenient for one to tag a specific method with the combination of the categorization label. This would help one to understand a specific approach easier.
+
+---
 
 
