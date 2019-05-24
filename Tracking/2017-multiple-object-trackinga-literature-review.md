@@ -158,5 +158,30 @@ Table 3 lists the major differences between DBT and DFT.
 
 #### 2.2.2 Processing Mode
 
+현재 프레임을 처리 할때 이후 프레임 정보를 사용 하느냐 아니냐에 따라 온라인/오프라인 방식으로 나뉜다. `MOT can also be categorized into online tracking and offline tracking. The difference is whether or not observations from future frames are utilized when handling the current frame. `
+
+
+온라인은 **인과방식(casual)**이라도도 불리운다. 추적 기법은 과거의 정보만을 이용하기 때문이다. 반면 오프라인(=배치트래킹)은 과거와 미래 정보 모두를 이용한다. `Online, also called causal, tracking methods only rely on the past information available up to the current frame, while offline, or batch tracking approaches employ observations both in the past and in the future.`
+
+![](https://i.imgur.com/iB7kKat.png)
+
+##### Online tracking. 
+
+In online tracking [52], [53], [54], [56], [57], the image sequence is handled in a step-wise manner, thus online tracking is also named as sequential tracking. 
+
+An illustration is shown in Figure 2 (top), with three objects (different circles) a, b, and c. The green arrows represent observations in the past. The results are represented by the object’s location and its ID. Based on the up-to-time observations, trajectories are produced on the fly. 
+
+##### Offline tracking. 
+
+Offline tracking [1], [46], [47], [51], [58], [59], [60], [61], [62], [63] utilizes a batch of frames to process the data. 
+
+As shown in Figure 2 (bottom), observations from all the frames are required to be obtained in advance and are analyzed jointly to estimate the final output. 
+
+계산 부하의 문제가 있어 나누거나 게층 구조로 처리 하기도 한다. `Note that, due to computational and memory limitation, it is not always possible to handle all the frames at once. An alternative solution is to split the data into shorter video clips, and infer the results hierarchically or sequentially for each batch. `
+
+
+Table 4 lists the differences between the two processing modes.
+
+![](https://i.imgur.com/1pMV8Bp.png)
 
 
