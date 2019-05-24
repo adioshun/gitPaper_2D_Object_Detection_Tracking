@@ -59,4 +59,68 @@ MOT에서 주요 이슈는 `Apart from the common challenges in both SOT and MOT
 
 그래서 본 논문을 작성 하였다. `Therefore, in this work we provide a review to discuss the various aspects of the multiple object tracking problem.`
 
+### 1.1 Differences from Other Related Reviews
+
+기존의 여러 리뷰 논문을 분류 하면 아래와 같다. `To the best of our knowledge, there has not been any comprehensive literature review on the topic of multiple object tracking. However, there have been some other reviews related to multiple object tracking, which are listed in Table 1. We group these surveys into three sets and highlight the differences from ours as follows.`
+
+![](https://i.imgur.com/JszNpgL.png)
+
+리뷰논문들의 첫 분류 : The **first set** [19], [20], [21], [23], [24] discusses tracking as an individual part while this work specifically discusses various aspects of MOT. For example, object tracking is discussed as a step in the procedure of high-level tasks such as crowd modeling [19], [23], [24]. Similarly, in [21] and [20], object tracking is reviewed as a part of a system for behavior recognition [21] or video surveillance [20].
+
+
+리뷰논문들의 두번째 분류 :The **second set** [25], [26], [27], [28] is dedicated to general visual tracking techniques [25], [26], [27] or some special issues such as appearance models in visual tracking [28]. Their reviewing scope is wider than ours; ours on the contrary is more comprehensive and focused on multiple object tracking.
+
+
+리뷰논문들의 세번째 분류 :The **third set** [29], [30] introduces and discusses benchmarks on general visual tracking [29] and on specific multiple object tracking [30]. Their attention is laid on experimental studies rather than literature reviews.
+
+
+
+### 1.2 Contributions
+
+본 논문의 기여와 구성 요소는 아래와 같다. `We provide the first comprehensive review on the MOT problem to the computer vision community, which we believe is helpful to understand this problem, its main challenges, pitfalls, and the state of the art. The main contributions of this review are summarized as follows:`
+
+- 2.1절에서는 문제점을 정의 하고 2.2절에서는 기술 분류 하였다.  `We derive a unified formulation of the MOT problem which consolidates most of the existing MOT methods (Section 2.1), and two different ways to categorize MOT methods (Section 2.2).`
+
+- 3장에서는 구성요소에 대하여 기술 하였다.`We investigate different key components involved in an MOT system, each of which is further divided into different aspects and discussed in detail regarding its principles, advances, and drawbacks (Section 3).`
+
+- 4장에서는 실험 결과와 데이터셋을 기술 하였다. `Experimental results on popular datasets regarding different approaches are presented, which makes future experimental comparison convenient. By investigating the provided results, some interesting observations and findings are revealed (Section 4).`
+
+- 5장에서는 미해결 문제와 연구 방향을 기술 하였다. `By summarizing the MOT review, we unveil existing issues of MOT research. Furthermore, open problems are discussed to identify potential future research directions (Section 5).`
+
+
+최근 연구 물들을 중심으로 하였다. `Note that this work is mainly dedicated to reviewing recent literature on the advances in multiple object tracking. As mentioned above, we also present experimental results on publicly available datasets excepted from existing publications to provide a quantitative view on the state-of-the-art MOT methods. `
+
+활용된 벤치마킹 결과는 [30]이다. `For standardized benchmarking of multiple object tracking we kindly refer the readers to the recent work MOTChallenge by Leal-Taixe´ et al. [30].`
+
+
+### 1.3 Organization of This Review
+
+
+
+### 1.4 Denotations
+
+
+
+## 2 MOT PROBLEM
+
+MOT의 문제점을 수학적으로 기술 하였다. We first endeavor to give a general mathematical formulation of MOT. We then discuss its possible categorizations based on different aspects.`
+
+### 2.1 Problem Formulation
+
+
+### 2.2 MOT Categorization
+
+It is difficult to classify one particular MOT method into a
+distinct category by a universal criterion. Admitting this, it is thus feasible to group MOT methods by multiple criteria.
+In the following we attempt to conduct this according to
+three criteria: a) initialization method, b) processing mode, and
+c) type of output. The reason we choose these three criteria is
+that this naturally follows the way of processing a task, i.e.,
+how the task is initialized, how it is processed and what type
+of result is obtained. In the following, each of the criteria
+along with its corresponding categorization is represented.
+
+
+
+
 
