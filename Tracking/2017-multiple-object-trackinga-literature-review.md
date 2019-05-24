@@ -215,4 +215,299 @@ By providing these three criteria described above, it is convenient for one to t
 
 ---
 
+## 3 MOT COMPONENTS 
 
+MOT의  구성 요소를 다루고 있다. `In this section, we represent the primary components of an MOT approach. As mentioned above, the goal of MOT is to discover multiple objects in individual frames and recover the identity information across continuous frames, i.e., trajectory, from a given sequence. `
+
+MOT개발시 2가지를 고려 해야 한다. `When developing MOT approaches, two major issues should be considered. `
+- 물체들간의 유사성을 측정(`Measure`) 하는 방법. `One is how to measure similarity between objects in frames, `
+- 유사성을 기반으로 ID값을 찾는 법 `the other one is how to recover the identity information based on the similarity measurement between objects across frames. `
+
+Roughly speaking, 
+- 유사성 측정은 외형, 움직인, 상호작용, 가려짐의 **Modeling** 작업이다. `the first issue involves the modeling of appearance, motion, interaction, exclusion, and occlusion. `
+- ID 찾는것은 **Inference**문제 이다. `The second one involves with the inference problem.`
+
+We review recent progress regarding both items as the following
+
+### 3.1 Appearance Model
+
+외관은 관련성(`affinity`) 계산하는데 중요한 요소 이다. `Appearance is an important cue for affinity computation in MOT. `
+
+그러나 SOT의 경우 배경에서 **sophisticated appearance model**을 생성하는것에 초점을 두고 있는 반면 대부분의 MOT는 외형 모델을 중요하게 생각 하지 않는다. `However, different from single object tracking, which primarily focuses on constructing a sophisticated appearance model to discriminate object from background, most MOT methods do not consider appearance modeling as the core component, although it can be an important one. `
+
+외형 모델은 두가지 구성 요소로 이루어져 있다. `Technically, an appearance model includes two components: `
+- visual representation and 
+- statistical measuring. 
+
+**Visual representation**은 물체의 시각적 특성을 특징 정보를 이용하여 기술 하는것이다. ` Visual representation describes the visual characteristics of an object using some features, either based on a single cue or multiple cues. `
+
+**Statistical measuring**은 다른 특정에서 유사성을 계산 하는 것이다. `Statistical measuring, on the other hand, is the computation of similarity between different observations.`
+
+#### 3.1.1 Visual Representation
+
+##### Local features.
+
+##### Region features.
+
+바운딩 박스에서 추출 된다. `Compared with local features, region features are extracted from a wider range (e.g. a bounding box). `
+
+We illustrate them as three types: 
+- a) zero-order type,
+- b) first-order type and 
+- c) up-to-second-order type
+
+##### Others.
+
+ Besides local and region features, there are some other kinds of representation. 
+ - Taking depth as an example, it is typically used to refine detection hypotheses [71], [84], [85], [86], [87]. 
+ - The Probabilistic Occupancy Map (POM) [42], [88] is employed to estimate how likely an object would occur in a specific grid cell. 
+ - One more example is gait(걸음걸이) feature, which is unique for individual persons [62].
+
+##### Discussion
+
+#### 3.1.2 Statistical Measuring
+
+This step is closely related to the section above. 
+
+Based on visual representation, statistical measure computes the affinity between two observations. 
+
+While some approaches solely rely on one kind of cue, others are built on multiple cues.
+
+##### Single cue. 
+
+단일 cue를 이용하여 외형을 모델링 하는 방법은 **거리 정보를 유사도로 변환**하거나 **직접 유사성을 계산** 하는 방법이 있다. `Modeling appearance using single cue is either transforming distance into similarity or directly calculating the affinity. `
+
+For example, the **Normalized Cross Correlation (NCC)** is usually adopted to calculate the affinity between two counterparts based on the representation of raw pixel template mentioned above [2], [69], [80], [90]. 
+
+Speaking of color histogram, Bhattacharyya distance B (·, ·) is used to compute the distance between two color histograms ci and cj . The distance is transformed into similarity S like S (Ti , Tj ) = exp (−B (ci , cj )) [31], [36], [58], [62], [63], [91] or fit the distance to Gaussian distributions like [38]. Transformation of dissimilarity into likelihood is also applied to the representation of covariance matrix [61]. Besides these typical models, bag-of-words model [92] is employed based on point feature representation [33].
+
+##### Multi cue
+
+다중 cue를 사용하여서 외형 모델을 좀더 강인하게 만들수 있다. `Different kinds of cues can complement each other to make the appearance model more robust. `
+
+그러나 정보를 융합하는 방법을 결정하는 것은 쉬운 일이 아니다. `However, it not trivial to decide how to fuse the information from multiple cues. ` 
+
+퓨젼 방법론을 5가지로 분류 해 보았다. `Regarding this, we summarize multicue based appearance models according to five kinds of fusion strategies: `Boosting, Concatenating, Summation, Product, and Cascading (see also Table 5).
+
+![](https://i.imgur.com/ac3uuAc.png)
+
+###### Boosting.
+The strategy of Boosting usually selects a portion of features from a feature pool sequentially via a Boosting based algorithm. 
+
+For example, from color histogram, HOG and covariance matrix descriptor, AdaBoost, RealBoost, and a HybridBoost algorithm are respectively employed to choose the most representative features to discriminate pairs of tracklets of the same object from those of different objects in [60], [49] and [40]. 
+
+###### Concatenation. 
+Different kinds of features can be concatenated for computation. In [46], color, HOG and optical flow are concatenated for appearance modeling. 
+
+######  Summation. 
+This strategy takes affinity values from different features and balance these values with weights [71], [93], [94]. 
+
+###### Product. 
+Differently from the strategy above, values are multiplied to produce the integrated affinity [33], [51], [95], [96]. Note that, independence assumption is usually made when applying this strategy. 
+
+###### Cascading. 
+This is a cascade manner of using various types of visual representation, either to narrow the search space [87] or model appearance in a coarseto-fine way [77].
+
+
+
+### 3.2 Motion Model
+
+모션 모델은 물체의 동적 움직임을 capture하는 것이다. `The motion model captures the dynamic behavior of an object. `
+
+모션 모델은 다음 프레임에서의 물체 위치를 예측 하여 탐색 부하를 줄여 준다. `It estimates the potential position of objects in the future frames, thereby reducing the search space. `
+
+대부분의 경우 물체는 천천히 움직인다고 가정한다. `In most cases, objects are assumed to move smoothly in the world and therefore in the image space (except for abrupt motions).`
+
+본 논문에서는 선형 모델과 비선형 모델을 살펴 보겠다. ` We will discuss linear motion model and non-linear motion model in the following.`
+
+
+#### 3.2.1 Linear Motion Model
+
+가장 인기 있는 모델이다. `This is by far the most popular model [32], [97], [98]. `
+
+고정 속도라는 가정하에 이 모델을 만든다. 모델 생성하는데는 3가지 방법이 있다. `A constant velocity assumption [32] is made in this model. Based on this assumption, there are three different ways to construct the model.`
+
+
+##### 가. Velocity smoothness 
+
+물체에 속도값을 강제 적용하여 속도가 서서히 변하게 한다. Velocity smoothness is modeled by enforcing the velocity values of an object in successive frames to change smoothly. 
+
+In [45], it is implemented as a cost term, 
+
+![](https://i.imgur.com/ylOKsT9.png)
+
+where the summation is conducted over N frames and M trajectories/objects.
+
+##### 나. Position smoothness
+
+이 방식은 탐지 위치와 예측 위치의 불 일치에 강제성을 준다. `Position smoothness directly forces the discrepancy between the observed position and estimated position. `
+
+###### Let us take [31] as an example.
+
+ Considering a temporal gap ∆t between tail of tracklet T_j and head of tracklet T_j , the smoothness is modeled by fitting the estimated position to a Gaussian distribution with the observed position as center. 
+
+In the stage of estimation, both forward motion and backward motion are considered. Thus, the affinity considering linear motion model is,
+
+![](https://i.imgur.com/4DqFfio.png)
+
+where “F” and “B” means forward and backward direction. 
+
+###### A similar strategy is adopted by Yang et al. [59]. 
+
+The displacement between observed position and estimated position ∆p is fit to a Gaussian distribution with zero center. 
+
+###### Other examples of this strategy are [1], [7], [58], [59], [60], [99].
+
+##### 다. Acceleration smoothness. 
+
+[99]에서는 위치/속도외에 가속도도 고려 되었다. `Besides considering position and velocity smoothness, acceleration is taken into account [99]. `
+
+The probability distribution of motion of a state {^s_k} at time k given the observation tracklet {o_k} is modeled as,
+
+![](https://i.imgur.com/5mGYfe0.png)
+
+where 
+- v_k is the velocity, 
+- a_k is the acceleration, 
+- N is a zero-mean Gaussian distribution.
+
+#### 3.2.2 Non-linear Motion Model
+
+대부분의 경우 선형 모델로 표현 된다. `The linear motion model is commonly used to explain the object’s dynamics. `
+
+그러나 더 정확한 모델 표현을 위해 비선형이 필요 하다. 	`However, there are some cases which the linear motion model cannot deal with. To this end, nonlinear motion models are proposed to produce more accurate motion affinity between tracklets.` 	
+
+![](https://i.imgur.com/4gHocGj.png)
+
+For instance, Yang et al. [47] employ a non-linear motion model to handle the situation that targets may move freely. Given two tracklets T1 and T2 which belong to the same target in Figure 4(a), the linear motion model [59] would produce a low probability to link them. Alternatively, employing the non-linear motion model, the gap between the tail of tracklet T1 and the head of tracklet T2 could be reasonably explained by a tracklet T0 ∈ S, where S is the set of support tracklets. 
+
+As shown in Figure 4(b), T0 matches the tail of T1 and the head of T2. Then the real path to bridge T1 and T2 is estimated based on T0, and the affinity between T1 and T2 is computed similarly as described in Section 3.2.1.
+
+### 3.3 Interaction Mode (=mutual motion model)
+
+물체와 물체들사이의 영향력을 표현한 것이다. `Interaction model, also known as mutual motion model, captures the influence of an object on other objects. `
+
+In the crowd scenery, an object would experience some “force” from other agents and objects. 
+
+For instance, when a pedestrian is walking on the street, he would adjust his speed, direction and destination, in order to avoid collisions with others. 
+
+Another example is when a crowd of people walk across a street, each of them follows other people and guides others at the same time. 
+
+In fact, these are examples of two typical interaction models known as the social force models [100] and the crowd motion pattern models [101].
+
+#### 3.3.1 Social Force Models
+
+#### 3.3.2 Crowd Motion Pattern Models
+
+### 3.4 Exclusion Model
+
+Exclusion is a constraint employed to avoid physical collisions when seeking a solution to the MOT problem. 
+
+이는 물리 공간에서 두개의 물체가 동일한 곳에 있을수 없다는 사실에 기반 한다. `It arises from the fact that two distinct objects cannot occupy the same physical space in the real world. `
+
+Given multiple detection responses and multiple trajectory hypotheses, generally there are two constraints. The first one is the socalled detection-level exclusion [105], i.e., two different detection responses in the same frame cannot be assigned to the same target. The second one is the so-called trajectory-level exclusion, i.e., two trajectories cannot be infinitely close to each other.
+
+### 3.5 Occlusion Handling
+
+맞물림은 MOT에서 가장 큰 문제이다. `Occlusion is perhaps the most critical challenge in MOT. `
+
+맞물림으로 인해 ID변경이나 궤도 단절이 발생 한다. `It is a primary cause for ID switches or fragmentation of trajectories. `
+
+In order to handle occlusion, various kinds of strategies have been proposed.
+
+#### 3.5.1 Part-to-whol
+
+#### 3.5.2 Hypothesize-and-tes
+
+#### 3.5.3 Buffer-and-recove
+
+#### 3.5.4 Others
+
+### 3.6 Inference
+
+#### 3.6.1 Probabilistic Inference 
+
+이 방식의 물체의 상태를 **distribution with uncertainty**로 표현한다. ` Approaches based on probabilistic inference typically represent states of objects as a distribution with uncertainty. `
+
+추적기의 목표는 이전 측정 값들에 probability reasoning기법을 적용하여 target state의 probabilistic distribution를 예측 하는 것이다. `The goal of a tracking algorithm is to estimate the probabilistic distribution of target state by a variety of probability reasoning methods based on existing observations. `
+
+이 방식은 과거의 측정 정보들만 필요로 하기 때문에 일종의 온라인 추적기이다. `This kind of approaches typically requires only the existing, i.e. past and present observations, thus they are especially appropriate for the task of online tracking. `
+
+존재 하는 측정치만 예측에 사용되므로 자연적으로 마코프 속성.....As only the existing observations are employed for estimation, it is naturally to impose the assumption of Markov property in the objects state sequence. 
+
+This assumption includes two aspects, recalling the formula in Section 2.1.
+- First, the current object state only depends on the previous states. Further, it only depends on the very last state if the first-order Markov property is imposed,
+- Second, the observation of an object is only related to its state corresponding to this observation. In other words, the observations are conditionally independent
+
+위 두 관점은 **동적 모델**과 **관측 모델**에 관련이 있다. `These two aspects are related to the Dynamic Model and the Observation Model, respectively. `
+
+동적 모델은 **tracking strategy**에 해당한다. 관측 모델은 물체 상태에 관련있는 관측값을 제공한다. `The dynamic model corresponds to the tracking strategy, while the observation model provides observation measurements concerning object states.`
+
+예측 (`Prediction step`)단계에서 과거 관측치를 기반으로 현재 상태를 예측 한다. `The predict step is to estimate the current state based on all the previous observations.`
+
+좀더 자세히는  현 상태의 **posterior probability distribution **은 동적 모델로 합쳐진 이전 물체 상태로 예측 된다. `More specifically, the posterior probability distribution of the current state is estimated by integrating in the space of the last object state via the dynamic model. `
+
+업데이트(`update step`) 단계는 관측 모델하에 얻어진 측정값을 기반으로 **posterior probability distribution **를 업데이트 하는 것이다. `The update step is to update the posterior probability distribution of states based on the obtained measurements under the observation model.`
+
+
+According to the equations, states of objects can be estimated by iteratively conducting the prediction and updating steps. 
+
+However, in practice, the object state distribution cannot be represented without simplifying assumptions, thus there is no analytical solution to computing the integral of the state distribution. 
+
+Additionally, for multiple objects, the dimension of the sets of states is very large, which makes the integration even more difficult, requiring the derivation for approximate solutions.
+
+대표적인 **probabilistic inference models**들 ` Various kinds of probabilistic inference models haves been applied to multi-object tracking [36], [95], [117], [118], such as Kalman filter [35], [37], Extended Kalman filter [34]and Particle filter [32], [33], [52], [93], [119], [120], [121], [122].`
+
+##### 가. Kalman filter. 
+
+선형/정규 분포 `In the case of a linear system and Gaussian-distributed object states, the Kalman filter [37] is proved to be the optimal estimator. It has been applied in [35].`
+
+
+##### 나. Extended Kalman filter. 
+
+비선형 `To include the non-linear case, the extended Kalman filter is one possible solution. It approximates the non-linear system by a Taylor expansion [34].`
+
+##### 다. Particle filter. 
+
+**Monte Carlo sampling** 최근 가장 인기 있는 기법 이다. `Monte Carlo sampling based models have also become popular in tracking, especially after the introduction of the particle filter [10], [32], [33], [52], [93], [119], [120], [121]. `
+
+This strategy models the underlying distribution by a set of weighted particles, thereby allowing to drop any assumptions about the distribution itself [32], [33], [36], [93].
+
+
+#### 3.6.2 Deterministic Optimization
+
+
+이 방식은 MAP를 찾는 것이다. `As opposed to the probabilistic inference methods, approaches based on deterministic optimization aim to find the maximum a posteriori (MAP) solution to MOT. `
+
+이렇게 하기 위해 데이터 연동/Target state 추론은 최적화 문제로 변하게 된다. `To that end, the task of inferring data association, the target states or both, is typically cast as an optimization problem. `
+
+이 방식은 **오프라인 추적기**에 좀더 적합하다. `Approaches within this framework are more suitable for the task of offline tracking `
+- because observations from all the frames or at least a time window are required to be available in advance. 
+
+Given observations (usually detection hypotheses) from all the frames, these types of methods endeavor to globally associate observations belonging to an identical object into a trajectory. 
+
+중요 문제는 어떻게 최적의 association을 하는가 이다. `The key issue is how to find the optimal association.`
+
+주요 기법들은 아래와 같다. ` Some popular and well-studied approaches are detailed in the following.`
+
+##### 가. Bipartite graph matching
+
+##### 나. Dynamic Programming.
+
+##### 다. Min-cost max-flow network flow.
+
+##### 라. Conditional random field.
+
+##### 마. MWIS 
+
+#### 3.6.3 Discussion 
+
+현실에서는 확률 기반 접근 방식 보다는 결정론적 최적화 방식이 더 많이 사용된다. `In practice, deterministic optimization or energy minimization is employed more popularly compared with probabilistic approaches. `
+
+> 왜? 오프라인 추적기인데???
+
+비록, 확률기반이 직관적이고, 완벽한 솔루션이지만 대부분 **추론**이 어렵다. Although the probabilistic approaches provide a more intuitive and complete solution to the problem, they are usually difficult to infer. 
+
+반면, 최적화 기반은 주어진 시간동안 꽤 괜찮은 결과를 뽑아 낸다. `On the contrary, energy minimization could obtain a “good enough” solution in a reasonable time.`
+
+---
