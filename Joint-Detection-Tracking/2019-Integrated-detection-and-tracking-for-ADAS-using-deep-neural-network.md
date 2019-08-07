@@ -1,6 +1,8 @@
 # [Integrated detection and tracking for ADAS using deep neural network](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8695310&tag=1)
 
 
+> 탐색기는 SSD변형 + 추적기, 완전한 end-to-end는 아님것 같음
+
 탐지, 추적, 인지가 가능한 통합 솔루션 제안 `The recent advancements in computer vision technology have ensured that it has an increasingly important position in intelligent transportation.This paper proposes an integral system, including object detection and tracking, to recognize multiple objects in dynamic and complex real-world scenes. `
 
 기반은 SSD방식의 SqueezeNet 활용. 탐지기는 추적기 이후에 수행된다. 추적기는 CNN기반 여러 Feature+ motion information+shape information들을 Fuse한다. `A backbone network of the single shot multi-box detector (SSD) is implemented using an improved SqueezeNet for performance improvement. The object detector is followed by an online object tracker that fuses multiple information features, including the appearance feature extracted by CNNs, motion information, and shape information. `
