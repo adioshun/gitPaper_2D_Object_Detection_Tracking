@@ -17,6 +17,10 @@
 * [\[추천\] 2017-Multiple Object Tracking\_A Literature Review\(70%\)](Tracking/2017-multiple-object-trackinga-literature-review.md)
 * [2017-High-Speed Tracking-by-Detection Without Using Image Information](Tracking/2017-high-speed-tracking-by-detection-without-using-image-information.md)
 
+## Joint Detection Tracking
+
+* [2019-Integrated-detection-and-tracking-for-ADAS-using-deep-neural-network](Joint-Detection-Tracking/2019-Integrated-detection-and-tracking-for-ADAS-using-deep-neural-network.md)
+
 ## Pose Estimation
 
 * [README.md](Pose-Estimation/README.md)
